@@ -1,4 +1,5 @@
 import gi
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
@@ -21,6 +22,7 @@ class FiestraPrincipal(Gtk.Window):
 
         self.txtSaudo = Gtk.Entry()
         self.caja.pack_start(self.txtSaudo, True, True, 0)
+        self.txtSaudo.connect("activate", self.saludo_boton)
 
         self.btnSaudo = Gtk.Button(label="Pulsame")
         self.caja.pack_start(self.btnSaudo, True, True, 0)
@@ -34,6 +36,8 @@ class FiestraPrincipal(Gtk.Window):
             print("El nombre está vacío")
         else:
             self.lbSaudo.set_label("Un saludo para " + self.txtSaudo.get_text())
+
+
 
 
 if __name__ == '__main__':
