@@ -7,23 +7,23 @@ class FiestraPrincipal(Gtk.Window):
     def __init__(self):
         super().__init__()
         self.set_title("EjemploGtkGrid")
-        self.set_size_request(100, 250) #definimos el tamaño de la ventana
+        self.set_size_request(200, 250) #definimos el tamaño de la ventana
         self.set_resizable(False) #indicamos que no se puede estirar la ventana
 
         self.maia = Gtk.Grid()
 
-        self.boton1 = Gtk.Button(label="1")
-        self.boton2 = Gtk.Button(label="2")
-        self.boton3 = Gtk.Button(label="3")
-        self.boton4 = Gtk.Button(label="4")
-        self.boton5 = Gtk.Button(label="5")
-        self.boton6 = Gtk.Button(label="6")
-        self.boton7 = Gtk.Button(label="7")
-        self.boton8 = Gtk.Button(label="8")
-        self.boton9 = Gtk.Button(label="9")
-        self.boton10 = Gtk.Button(label="10")
-        self.boton11 = Gtk.Button(label="11")
-        self.boton12 = Gtk.Button(label="12")
+        self.boton1 = Gtk.Button(label="boton 1")
+        self.boton2 = Gtk.Button(label="boton 2")
+        self.boton3 = Gtk.Button(label="boton 3")
+        self.boton4 = Gtk.Button(label="boton 4")
+        self.boton5 = Gtk.Button(label="boton 5")
+        self.boton6 = Gtk.Button(label="boton 6")
+        self.boton7 = Gtk.Button(label="boton 7")
+        self.boton8 = Gtk.Button(label="boton 8")
+        self.boton9 = Gtk.Button(label="boton 9")
+        self.boton10 = Gtk.Button(label="boton 10")
+        self.boton11 = Gtk.Button(label="boton 11")
+        self.boton12 = Gtk.Button(label="boton 12")
 
 
         self.maia.attach(self.boton1, 0, 0, 1, 1)
@@ -38,7 +38,7 @@ class FiestraPrincipal(Gtk.Window):
         self.maia.attach_next_to(self.boton9, self.boton8, Gtk.PositionType.BOTTOM, 1, 1)
         self.maia.attach_next_to(self.boton10, self.boton9, Gtk.PositionType.RIGHT, 1, 1)
         self.maia.attach_next_to(self.boton11, self.boton9, Gtk.PositionType.BOTTOM, 2, 3)
-        self.maia.attach_next_to(self.boton12, self.boton8, Gtk.PositionType.RIGHT, 4, 6)
+        self.maia.attach_next_to(self.boton12, self.boton8, Gtk.PositionType.RIGHT, 3, 6)
 
         self.add(self.maia)
 
