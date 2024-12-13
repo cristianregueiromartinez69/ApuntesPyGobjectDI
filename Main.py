@@ -22,7 +22,7 @@ class FiestraPrincipal(Gtk.Window):
 
         self.txtSaudo = Gtk.Entry()
         self.caja.pack_start(self.txtSaudo, True, True, 0)
-        self.txtSaudo.connect("activate", self.saludo_boton)
+        self.txtSaudo.connect("activate", self.saludo_boton) #activamos la tecla enter
 
         self.btnSaudo = Gtk.Button(label="Pulsame")
         self.caja.pack_start(self.btnSaudo, True, True, 0)
