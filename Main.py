@@ -28,7 +28,7 @@ class FiestraPrincipal(Gtk.Window):
         self.caja.pack_start(self.btnSaudo, True, True, 0)
 
         self.btnSaudo.connect("clicked", self.saludo_boton) #conectamos el boton con una funcion
-        self.show_all() #mostramos todo
+        self.show_all() #mostramos el layout
 
 
     def saludo_boton(self, button):
@@ -36,11 +36,12 @@ class FiestraPrincipal(Gtk.Window):
             print("El nombre está vacío")
         else:
             self.lbSaudo.set_label("Un saludo para " + self.txtSaudo.get_text())
+            self.txtSaudo.set_text("")
 
 
 
 
 if __name__ == '__main__':
     win = FiestraPrincipal()
-    win.connect("destroy", Gtk.main_quit)  #si cerramos la pp, se cierra todo
+    win.connect("destroy", Gtk.main_quit)  #si cerramos la pp, se cierra
     Gtk.main()
