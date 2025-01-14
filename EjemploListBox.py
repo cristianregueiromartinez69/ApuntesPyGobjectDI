@@ -56,12 +56,16 @@ class FiestraPrincipal(Gtk.Window):
         self.listBox.add(self.fila2)
 
         self.listBox2 = Gtk.ListBox()
+        self.listBox2.set_sort_func(self.funcion_ordenacion) #Permite pasar una funcion que ordene bajo el criterio que decidas lo que es la lista
+        self.listBox2.set_filter_func(self.funcion_filtracion)
         elementos = "Esta es una lista con elementos desordenada".split()
         for elemento in elementos:
             self.listBox2.add(ListBoxConDatos(elemento))
 
         self.listBox2.connect("row-activated", self.on_row_activated)
         self.cajaPrincipal.pack_start(self.listBox2, True, True, 0)
+
+
 
         self.listBox2.show_all()
 
@@ -72,7 +76,11 @@ class FiestraPrincipal(Gtk.Window):
     def on_row_activated(self, listBox, fila):
         print(fila.dato)
 
+    def funcion_ordenacion(self, fila1, fila2):
+        return fila1.dato.lower() < fila2.dato.lower()
 
+    def funcion_filtracion(self, fila):
+        return False if fila.dato == "lista" else True
 
 
 if __name__ == '__main__':
