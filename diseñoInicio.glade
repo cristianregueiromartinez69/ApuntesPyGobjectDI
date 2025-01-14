@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkWindow" id="main">
+    <property name="name">main</property>
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Primer proyecto de glade</property>
+    <property name="default-width">200</property>
+    <property name="default-height">160</property>
+    <signal name="delete-event" handler="Gtk.main_quit" swapped="no"/>
+    <signal name="destroy" handler="on_main_destroy" swapped="no"/>
+    <child>
+      <object class="GtkBox" id="cajaPrincipal">
+        <property name="name">cajaPrincipal</property>
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">6</property>
+        <child>
+          <object class="GtkEntry" id="textoEntry">
+            <property name="name">textoEntry</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="editable">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="padding">19</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="cajaHorizontal">
+            <property name="name">cajaHorizontal</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkCheckButton" id="checkBEditable">
+                <property name="label" translatable="yes">Editable</property>
+                <property name="name">checkBEditable</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">False</property>
+                <property name="draw-indicator">True</property>
+                <signal name="toggled" handler="on_chkEditable_toogled" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="checkBVisible">
+                <property name="label" translatable="yes">Visible</property>
+                <property name="name">checkBVisible</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">False</property>
+                <property name="draw-indicator">True</property>
+                <signal name="toggled" handler="on_visible_toogle" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="checkBPulso">
+                <property name="label" translatable="yes">Pulso</property>
+                <property name="name">checkBPulso</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">False</property>
+                <property name="draw-indicator">True</property>
+                <signal name="toggled" handler="on_pulso_toogle" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="checkBIcono">
+                <property name="label" translatable="yes">Icono</property>
+                <property name="name">checkBIcono</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">False</property>
+                <property name="draw-indicator">True</property>
+                <signal name="toggled" handler="on_chkIcono_toogle" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">6</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="padding">24</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
