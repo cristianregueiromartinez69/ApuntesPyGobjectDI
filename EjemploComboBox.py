@@ -68,7 +68,7 @@ class FiestraPrincipal(Gtk.Window):
         self.cmbIconos.set_model(self.modeloIconos)
         self.celdaGraficos = Gtk.CellRendererPixbuf()
         self.cmbIconos.pack_start(self.celdaGraficos, True)
-        self.cmbPaises.add_attribute(self.celdaGraficos, "Image", 1)
+        self.cmbIconos.add_attribute(self.celdaGraficos, "icon_name", 1)
         self.cajaVertical.pack_start(self.cmbIconos, True, True, 0)
 
 
