@@ -47,7 +47,35 @@ class FiestraPrincipal(Gtk.Window):
         self.cmbPaises.pack_start(self.celdaTexto, True)
         self.cmbPaises.add_attribute(self.celdaTexto, "text", 0)
 
+        self.cmbPaises.set_active(0)#Establecer un indice inicial para el comboBox
+
+        self.cmbColores = Gtk.ComboBoxText()
+        self.cmbColores.set_entry_text_column(0)
+        self.cmbColores.append_text("Rojo")
+        self.cmbColores.append_text("Azul")
+        self.cmbColores.append_text("Amarillo")
+        self.cmbColores.append_text("Verde")
+        self.cmbColores.append_text("Rosa")
+        self.cmbColores.append_text("Negro")
+        self.cmbColores.append_text("Blanco")
+
+        self.cmbIconos = Gtk.ComboBox()
+        self.modeloIconos = Gtk.ListStore(str,str)
+        self.modeloIconos.append(("Novo", "document_new"))
+        self.modeloIconos.append(("Abrir", "document_open"))
+        self.modeloIconos.append(("Gardar", "document_save"))
+
+        self.cmbIconos.set_model(self.modeloIconos)
+        self.celdaGraficos = Gtk.CellRendererPixbuf()
+        self.cmbIconos.pack_start(self.celdaGraficos, True)
+        self.cmbPaises.add_attribute(self.celdaGraficos, "Image", 1)
+        self.cajaVertical.pack_start(self.cmbIconos, True, True, 0)
+
+
+
         self.cajaVertical.pack_start(self.cmbPaises, True, True, 0)
+
+        self.cajaVertical.pack_start(self.cmbColores, True, True, 0)
 
 
         self.add(self.cajaVertical)
