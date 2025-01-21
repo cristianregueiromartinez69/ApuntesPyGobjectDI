@@ -66,9 +66,11 @@ class FiestraPrincipal(Gtk.Window):
 
         #añadiendo a los fallecidos
         self.celdaFallecido = Gtk.CellRendererToggle()
+        self.celdaFallecido.set_property("activatable", True)  # Hacer que sea interactiva
         self.columnaFallecido = Gtk.TreeViewColumn("Fallecido", self.celdaFallecido, active = 4)
         self.trvDatosUsuarios.append_column(self.columnaFallecido)
 
+        self.celdaFallecido.connect("toogled", self.on_toogled_chanded, self.modelo)
 
 
 
@@ -95,8 +97,8 @@ class FiestraPrincipal(Gtk.Window):
         dni = self.on_seleccion_changed(self.seleccion)
         self.base.update_usuarios2(newGenero, dni)
 
-    def on_fallecido_changed(self, celda, modelo, columna):
-        pass
+    def on_toogled_chanded(self, control, fila, modelo):
+        modelo[fila][4] = not modelo[fila][4]
 
 '''
 Mostra el ultimo campo de la tabla de usuarios2 que es un bool
