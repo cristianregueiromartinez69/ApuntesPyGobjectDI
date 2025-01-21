@@ -62,8 +62,16 @@ class FiestraPrincipal(Gtk.Window):
         self.celdaCombo.set_property("has-entry", False)
         self.celdaCombo.connect("changed", self.on_celdaXenero_changed, self.modelo, 3)
         self.columnagenero = Gtk.TreeViewColumn("Xenero", self.celdaCombo, text = 3)
-
         self.trvDatosUsuarios.append_column(self.columnagenero)
+
+        #añadiendo a los fallecidos
+        self.celdaFallecido = Gtk.CellRendererToggle()
+        self.columnaFallecido = Gtk.TreeViewColumn("Fallecido", self.celdaFallecido, active = 4)
+        self.trvDatosUsuarios.append_column(self.columnaFallecido)
+
+
+
+
 
 
         #dni, nome,. edade, genero, fallecido
@@ -87,7 +95,15 @@ class FiestraPrincipal(Gtk.Window):
         dni = self.on_seleccion_changed(self.seleccion)
         self.base.update_usuarios2(newGenero, dni)
 
+    def on_fallecido_changed(self, celda, modelo, columna):
+        pass
 
+'''
+Mostra el ultimo campo de la tabla de usuarios2 que es un bool
+1. que se muestra
+2. si clicamos que se cambie le modelo
+3. que tenga repercusión en la tabla
+'''
 
 if __name__ == '__main__':
     win = FiestraPrincipal()
