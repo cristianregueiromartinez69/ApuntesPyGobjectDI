@@ -33,6 +33,24 @@ class ConexionBD:
         except sqlite3.Error as e:
             print(f"Error al crear la tabla: {e}")
 
+
+    def crear_tablaEjemplo2(self):
+        """Crea la tabla 'usuarios' si no existe."""
+        try:
+            self.cursor.execute("""
+                CREATE TABLE IF NOT EXISTS usuarios2 (
+                    dni TEXT PRIMARY KEY,
+                    nome TEXT NOT NULL,
+                    idade Integer NOT NULL,
+                    genero TEXT NOT NULL,
+                    fallecido Integer
+                )
+            """)
+            self.conexion.commit()
+            print("Tabla usuarios creada correctamente")
+        except sqlite3.Error as e:
+            print(f"Error al crear la tabla: {e}")
+
     def consultaSenParametros(self, consultaSQL):
         """Realiza una consulta sin parámetros."""
         try:
@@ -65,6 +83,17 @@ class ConexionBD:
         try:
             self.cursor.execute(
                 "INSERT INTO usuarios (dni, name, apelido, numtelf) VALUES(?, ?, ?, ?)",
+                datos,
+            )
+            self.conexion.commit()
+            print("Usuario inserido correctamente.")
+        except sqlite3.Error as e:
+            print(f"Error al insertar datos usuarios: {e}")
+
+    def insertar_usuario2(self, datos):
+        try:
+            self.cursor.execute(
+                "INSERT INTO usuarios2 (dni, nome, idade, genero, fallecido) VALUES(?, ?, ?, ?, ?)",
                 datos,
             )
             self.conexion.commit()
