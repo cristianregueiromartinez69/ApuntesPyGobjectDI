@@ -36,11 +36,15 @@ class FiestraPrincipal(Gtk.Window):
 
         self.trvDatosUsuarios = Gtk.TreeView(model = self.modelo)
         self.seleccion = self.trvDatosUsuarios.get_selection()
+        self.seleccion.connect("changed", self.on_seleccion_changed)
+        self.celdaInicio = Gtk.CellRendererText()
 
         for i, tituloColumna in enumerate(["Dni", "Nome"]):
-            celda = Gtk.CellRendererText()
-            columna = Gtk.TreeViewColumn(tituloColumna, celda, text = i)
+            self.celdaInicio = Gtk.CellRendererText()
+            columna = Gtk.TreeViewColumn(tituloColumna, self.celdaInicio, text = i)
             self.trvDatosUsuarios.append_column(columna)
+
+
 
         self.celdaProgress = Gtk.CellRendererProgress()
         self.columna = Gtk.TreeViewColumn("Edade", self.celdaProgress, value = 2)
@@ -69,11 +73,20 @@ class FiestraPrincipal(Gtk.Window):
         self.add(self.cajaVertical)
         self.show_all()
 
+    def on_seleccion_changed(self, seleccion):
+        model, iterador = seleccion.get_selected()
+        if iterador != None:
+            dni = model[iterador][0]
+            return dni
+
     def on_celdaXenero_changed(self, celda, fila, filaXenero, modelo, columna):
         print(celda.props.model[filaXenero][0])
         print(modelo[fila][columna])
-
         modelo[fila][columna] = celda.props.model[filaXenero][0]
+        newGenero = celda.props.model[filaXenero][0]
+        dni = self.on_seleccion_changed(self.seleccion)
+        self.base.update_usuarios2(newGenero, dni)
+
 
 
 if __name__ == '__main__':

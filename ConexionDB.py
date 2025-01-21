@@ -100,3 +100,13 @@ class ConexionBD:
             print("Usuario inserido correctamente.")
         except sqlite3.Error as e:
             print(f"Error al insertar datos usuarios: {e}")
+
+    def update_usuarios2(self, newGenero, primaryKey):
+        try:
+            self.cursor.execute(
+                "UPDATE usuarios2 SET genero = ? WHERE dni = ?", (newGenero, primaryKey)
+            )
+            self.conexion.commit()
+            print("Usuario actualizado correctamente.")
+        except sqlite3.Error as e:
+            print(f"Error al actualizar datos usuarios: {e}")
