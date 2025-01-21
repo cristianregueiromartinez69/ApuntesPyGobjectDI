@@ -43,7 +43,7 @@ class FiestraPrincipal(Gtk.Window):
             self.trvDatosUsuarios.append_column(columna)
 
         self.celdaProgress = Gtk.CellRendererProgress()
-        self.columna = Gtk.TreeViewColumn("Edade", self.celdaProgress, value = 0)
+        self.columna = Gtk.TreeViewColumn("Edade", self.celdaProgress, value = 2)
         self.trvDatosUsuarios.append_column(self.columna)
 
         self.modeloCombo = Gtk.ListStore(str)
