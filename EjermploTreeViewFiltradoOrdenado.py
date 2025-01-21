@@ -56,7 +56,7 @@ class FiestraPrincipal(Gtk.Window):
         self.celdaCombo.props.model = self.modeloCombo
         self.celdaCombo.set_property("text-column", 0)
         self.celdaCombo.set_property("has-entry", False)
-        self.celdaCombo.connect("edited", self.on_celdaXenero_edited, self.modelo, 3)
+        self.celdaCombo.connect("changed", self.on_celdaXenero_changed, self.modelo, 3)
         self.columnagenero = Gtk.TreeViewColumn("Xenero", self.celdaCombo, text = 3)
 
         self.trvDatosUsuarios.append_column(self.columnagenero)
@@ -69,8 +69,11 @@ class FiestraPrincipal(Gtk.Window):
         self.add(self.cajaVertical)
         self.show_all()
 
-    def on_celdaXenero_edited(self):
-        pass
+    def on_celdaXenero_changed(self, celda, fila, filaXenero, modelo, columna):
+        print(celda.props.model[filaXenero][0])
+        print(modelo[fila][columna])
+
+        modelo[fila][columna] = celda.props.model[filaXenero][0]
 
 
 if __name__ == '__main__':
