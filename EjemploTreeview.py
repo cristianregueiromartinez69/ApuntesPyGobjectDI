@@ -15,12 +15,14 @@ class FiestraPrincipal(Gtk.Window):
 
         self.base = ConexionBD("usuarios.db")
 
-        '''
+
         self.datos_insertar = [("12345678K", "Pepe", "Pérez", "986 543 210"),
                                ("98765432A", "Ana", "Alonso", "982 345 678"),
                                ("12344321S", "Rosa", "Vila", "621 432 567"),
                                ("76567654C", "Jose", "Diaz", "657 890 012")]
-        '''
+
+
+
 
         self.datosBase = self.base.consultaSenParametros("SELECT * FROM usuarios")
 
@@ -36,9 +38,15 @@ class FiestraPrincipal(Gtk.Window):
 
         self.vista = Gtk.TreeView(model=self.listore)
 
+        self.objectoSeleccion = self.vista.get_selection()
+
+        self.objectoSeleccion.connect("changed", self.on_obxetoSeleccion_changed)
+
         for i in range(len(self.columnas)):
             celda = Gtk.CellRendererText()
             columna = Gtk.TreeViewColumn(self.columnas[i], celda, text = i)
+            if i == 1:
+                columna.set_sort_column_id(i)
             self.vista.append_column(columna)
 
         self.cajaVertical.pack_start(self.vista, True, True, 0)
@@ -46,6 +54,11 @@ class FiestraPrincipal(Gtk.Window):
 
         self.add(self.cajaVertical)
         self.show_all()
+
+    def on_obxetoSeleccion_changed(self, seleccion):
+        (modelo, fila) = seleccion.get_selected()
+        print(modelo[fila][0], modelo[fila][1], modelo[fila][2], modelo[fila][3])
+
 
 
 

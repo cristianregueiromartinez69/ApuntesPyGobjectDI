@@ -23,7 +23,7 @@ class FiestraPrincipal(Gtk.Window):
         self.modelo = Gtk.ListStore(str, str, int, str, bool)
         self.modelo_filtrado = self.modelo.filter_new()
         self.modelo_filtrado.set_visible_func(self.filtro_usuario_xenero)
-
+        self.modelo.set_sort_func(2, self.compara_modelo)
 
         self.datosbase = self.base.consultaSenParametros("SELECT * FROM usuarios2")
 
@@ -51,10 +51,13 @@ class FiestraPrincipal(Gtk.Window):
             self.trvDatosUsuarios.append_column(columna)
 
 
+        self.seleccion_ordenacion = self.trvDatosUsuarios.get_selection()
+
 
         self.celdaProgress = Gtk.CellRendererProgress()
         self.columna = Gtk.TreeViewColumn("Edade", self.celdaProgress, value = 2)
         self.trvDatosUsuarios.append_column(self.columna)
+        self.columna.set_sort_column_id(2)
 
         self.modeloCombo = Gtk.ListStore(str)
         self.modeloCombo.append(["Muller"])
@@ -78,16 +81,16 @@ class FiestraPrincipal(Gtk.Window):
 
         self.cajaFiltrarHorizontal = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         self.rbButtonHome = Gtk.RadioButton(label = "Home")
-        self.rbButtonMuller = Gtk.RadioButton(label = "Muller")
-        self.rbButtonNoHayMas = Gtk.RadioButton(label = "No Hay Mas")
+        self.rbButtonMuller = Gtk.RadioButton.new_with_label_from_widget(self.rbButtonHome, label = "Muller")
+        self.rbButtonNoHayMas = Gtk.RadioButton.new_with_label_from_widget(self.rbButtonHome, label = "No hay más")
 
         self.cajaFiltrarHorizontal.pack_start(self.rbButtonHome, False, False, 0)
         self.cajaFiltrarHorizontal.pack_start(self.rbButtonMuller, False, False, 0)
         self.cajaFiltrarHorizontal.pack_start(self.rbButtonNoHayMas, False, False, 0)
 
-        self.rbButtonHome.connect("toggled", self.on_genero_toggled, "Home", self.modelo)
-        self.rbButtonHome.connect("toggled", self.on_genero_toggled, "Muller", self.modelo)
-        self.rbButtonHome.connect("toggled", self.on_genero_toggled, "No hay más", self.modelo)
+        self.rbButtonHome.connect("toggled", self.on_genero_toggled, "Home", self.modelo_filtrado)
+        self.rbButtonHome.connect("toggled", self.on_genero_toggled, "Muller", self.modelo_filtrado)
+        self.rbButtonHome.connect("toggled", self.on_genero_toggled, "No hay más", self.modelo_filtrado)
 
         self.cajaVertical.pack_start(self.cajaFiltrarHorizontal, False, False, 0)
 
@@ -127,7 +130,7 @@ class FiestraPrincipal(Gtk.Window):
         if radioButton.get_active():
             self.filtradoGenero = genero
             #self.filtradoGenero = radioButton.props.label
-            self.modelo.refilter()
+            self.modelo_filtrado.refilter()
 
     def filtro_usuario_xenero(self, modelo, fila, datos):
         if self.filtradoGenero is None or self.filtradoGenero == "None":
@@ -135,6 +138,17 @@ class FiestraPrincipal(Gtk.Window):
         else:
             return modelo[fila][3] == self.filtradoGenero
 
+    def compara_modelo(self, modelo, fila1, fila2, datosUsuario):
+        columna_ordenada, _ = modelo.get_sort_column_id()
+        edade1 = modelo.get_value(fila1, columna_ordenada)
+        edade2 = modelo.get_value(fila2, columna_ordenada)
+
+        if edade1 < edade2:
+            return -1
+        elif edade1 == edade2:
+            return 0
+        elif edade1 > edade2:
+            return 1
 '''
 Mostra el ultimo campo de la tabla de usuarios2 que es un bool
 1. que se muestra
