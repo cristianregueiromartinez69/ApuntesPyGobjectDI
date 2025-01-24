@@ -34,9 +34,12 @@ class FiestraPrincipal(Gtk.Window):
 
 
 
+
         self.cajaVertical = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
 
         self.vista = Gtk.TreeView(model=self.listore)
+
+        self.listore.set_sort_func(1, self.compara_modelo, None)
 
         self.objectoSeleccion = self.vista.get_selection()
 
@@ -60,6 +63,17 @@ class FiestraPrincipal(Gtk.Window):
         print(modelo[fila][0], modelo[fila][1], modelo[fila][2], modelo[fila][3])
 
 
+    def compara_modelo(self, modelo, fila1, fila2, datosUsuario):
+        columna_ordenada, _ = modelo.get_sort_column_id()
+        valor1 = modelo.get_value(fila1, columna_ordenada)
+        valor2 = modelo.get_value(fila2, columna_ordenada)
+
+        if valor1 < valor2:
+            return -1
+        elif valor1 == valor2:
+            return 0
+        elif valor1 > valor2:
+            return 1
 
 
 if __name__ == '__main__':
