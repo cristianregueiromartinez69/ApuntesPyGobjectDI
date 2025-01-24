@@ -70,7 +70,7 @@ class FiestraPrincipal(Gtk.Window):
         self.columnaFallecido = Gtk.TreeViewColumn("Fallecido", self.celdaFallecido, active = 4)
         self.trvDatosUsuarios.append_column(self.columnaFallecido)
 
-        self.celdaFallecido.connect("toogled", self.on_toogled_chanded, self.modelo)
+        self.celdaFallecido.connect("toggled", self.on_toogled_chanded, self.modelo)
 
 
 
