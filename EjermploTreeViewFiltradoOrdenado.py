@@ -18,7 +18,12 @@ class FiestraPrincipal(Gtk.Window):
         self.base = ConexionBD("usuarios.db")
 
         self.filtradoGenero = None
+
+
         self.modelo = Gtk.ListStore(str, str, int, str, bool)
+        self.modelo_filtrado = self.modelo.filter_new()
+        self.modelo_filtrado.set_visible_func(self.filtro_usuario_xenero)
+
 
         self.datosbase = self.base.consultaSenParametros("SELECT * FROM usuarios2")
 
@@ -34,7 +39,8 @@ class FiestraPrincipal(Gtk.Window):
                 ]
         '''
 
-        self.trvDatosUsuarios = Gtk.TreeView(model = self.modelo)
+       # self.trvDatosUsuarios = Gtk.TreeView(model = self.modelo)
+        self.trvDatosUsuarios = Gtk.TreeView(model=self.modelo_filtrado)
         self.seleccion = self.trvDatosUsuarios.get_selection()
         self.seleccion.connect("changed", self.on_seleccion_changed)
         self.celdaInicio = Gtk.CellRendererText()
@@ -70,13 +76,23 @@ class FiestraPrincipal(Gtk.Window):
         self.columnaFallecido = Gtk.TreeViewColumn("Fallecido", self.celdaFallecido, active = 4)
         self.trvDatosUsuarios.append_column(self.columnaFallecido)
 
+        self.cajaFiltrarHorizontal = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        self.rbButtonHome = Gtk.RadioButton(label = "Home")
+        self.rbButtonMuller = Gtk.RadioButton(label = "Muller")
+        self.rbButtonNoHayMas = Gtk.RadioButton(label = "No Hay Mas")
+
+        self.cajaFiltrarHorizontal.pack_start(self.rbButtonHome, False, False, 0)
+        self.cajaFiltrarHorizontal.pack_start(self.rbButtonMuller, False, False, 0)
+        self.cajaFiltrarHorizontal.pack_start(self.rbButtonNoHayMas, False, False, 0)
+
+        self.rbButtonHome.connect("toggled", self.on_genero_toggled, "Home", self.modelo)
+        self.rbButtonHome.connect("toggled", self.on_genero_toggled, "Muller", self.modelo)
+        self.rbButtonHome.connect("toggled", self.on_genero_toggled, "No hay más", self.modelo)
+
+        self.cajaVertical.pack_start(self.cajaFiltrarHorizontal, False, False, 0)
+
+
         self.celdaFallecido.connect("toggled", self.on_toogled_chanded, self.modelo)
-
-
-
-
-
-        #dni, nome,. edade, genero, fallecido
 
         self.cajaVertical.pack_start(self.trvDatosUsuarios, False, True, 0)
 
@@ -98,7 +114,26 @@ class FiestraPrincipal(Gtk.Window):
         self.base.update_usuarios2(newGenero, dni)
 
     def on_toogled_chanded(self, control, fila, modelo):
-        modelo[fila][4] = not modelo[fila][4]
+        #modelo[fila][4] = not modelo[fila][4]
+        modelo[fila][4] = False if  control.get_active() else True
+        print(modelo[fila][4])
+        dni = self.on_seleccion_changed(self.seleccion)
+        if modelo[fila][4]:
+            self.base.update_fallecido(1, dni)
+        else:
+            self.base.update_fallecido(0, dni)
+
+    def on_genero_toggled(self, radioButton, genero, modelo):
+        if radioButton.get_active():
+            self.filtradoGenero = genero
+            #self.filtradoGenero = radioButton.props.label
+            self.modelo.refilter()
+
+    def filtro_usuario_xenero(self, modelo, fila, datos):
+        if self.filtradoGenero is None or self.filtradoGenero == "None":
+            return True
+        else:
+            return modelo[fila][3] == self.filtradoGenero
 
 '''
 Mostra el ultimo campo de la tabla de usuarios2 que es un bool

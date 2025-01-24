@@ -110,3 +110,16 @@ class ConexionBD:
             print("Usuario actualizado correctamente.")
         except sqlite3.Error as e:
             print(f"Error al actualizar datos usuarios: {e}")
+
+
+    def update_fallecido(self, newFallecido, primaryKey):
+        try:
+            self.cursor.execute(
+                "UPDATE usuarios2 SET fallecido = ? WHERE dni = ?", (newFallecido, primaryKey)
+            )
+            self.conexion.commit()
+            print("Usuario asesinado o salvado correctamente correctamente.")
+        except sqlite3.Error as e:
+            print(f"Error al actualizar datos usuarios: {e}")
+
+
