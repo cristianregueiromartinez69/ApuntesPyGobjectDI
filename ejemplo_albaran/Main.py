@@ -1,4 +1,3 @@
-from gettext import textdomain
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -83,9 +82,21 @@ class FiestraPrincipal(Gtk.Window):
         self.boton_borrar = Gtk.Button(label="Borrar")
         self.boton_borrar.set_size_request(150,15)
 
+        self.boton_engadir.connect("clicked", self.on_engadir_boton)
+
         self.grid_datos_botones.attach(self.boton_engadir,  0, 0, 1, 1)
         self.grid_datos_botones.attach_next_to(self.boton_editar, self.boton_engadir, Gtk.PositionType.RIGHT, 1, 1)
         self.grid_datos_botones.attach_next_to(self.boton_borrar, self.boton_editar, Gtk.PositionType.RIGHT, 1, 1)
+
+        self.texto_codigo_producto = Gtk.Entry()
+        self.texto_cantidade_producto = Gtk.Entry()
+        self.texto_prezo_producto = Gtk.Entry()
+
+        self.caja_horizontal_engadir_textos = Gtk.Box(Gtk.Orientation.HORIZONTAL, spacing=5)
+        self.caja_horizontal_engadir_textos.pack_start(self.texto_codigo_producto, True, True, 0)
+        self.caja_horizontal_engadir_textos.pack_start(self.texto_cantidade_producto, True, True, 0)
+        self.caja_horizontal_engadir_textos.pack_start(self.texto_prezo_producto, True, True, 0)
+
 
 
         #tabla
@@ -102,28 +113,42 @@ class FiestraPrincipal(Gtk.Window):
 
 
         self.celda_dos = Gtk.CellRendererText()
-        self.columna_dos = Gtk.TreeViewColumn("1", self.celda_dos, text=0)
+        self.columna_dos = Gtk.TreeViewColumn("Codigo producto", self.celda_dos, text=0)
         self.view_tabla.append_column(self.columna_dos)
 
         self.celda_tres = Gtk.CellRendererText()
-        self.columna_tres = Gtk.TreeViewColumn("2", self.celda_tres, text=1)
+        self.columna_tres = Gtk.TreeViewColumn("Nome do producto", self.celda_tres, text=1)
         self.view_tabla.append_column(self.columna_tres)
 
         self.celda_cuatro = Gtk.CellRendererText()
-        self.columna_cuatro = Gtk.TreeViewColumn("3", self.celda_cuatro, text=2)
+        self.columna_cuatro = Gtk.TreeViewColumn("Cantidade", self.celda_cuatro, text=2)
         self.view_tabla.append_column(self.columna_cuatro)
 
         self.celda_cinco = Gtk.CellRendererText()
-        self.columna_cinco = Gtk.TreeViewColumn("4", self.celda_cinco, text=3)
+        self.columna_cinco = Gtk.TreeViewColumn("Prezo unitario", self.celda_cinco, text=3)
         self.view_tabla.append_column(self.columna_cinco)
 
         #conexiones
         self.numero_albara_combo.connect("changed", self.on_numero_albara_changed)
 
 
+        self.caja_boton_cancelar = Gtk.Button(label="Cancelar")
+        self.caja_boton_aceptar = Gtk.Button(label="Aceptar")
+
+        self.caja_horizontal_botones_aceptar_cancelar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        self.caja_horizontal_botones_aceptar_cancelar.pack_start(self.caja_boton_cancelar, True, True, 0)
+        self.caja_horizontal_botones_aceptar_cancelar.pack_start(self.caja_boton_aceptar, True, True, 0)
+
+        self.caja_boton_cancelar.connect("clicked", self.on_boton_cancelar_connect)
+        self.caja_boton_aceptar.connect("clicked", self.on_boton_aceptar_connect)
+
         self.caja_vertical.pack_start(self.grid_datos, True, True, 0)
         self.caja_vertical.pack_start(self.grid_datos_botones, True, True, 0)
+        self.caja_vertical.pack_start(self.caja_horizontal_engadir_textos, True, True, 0)
         self.caja_vertical.pack_start(self.view_tabla, True, True, 0)
+        self.caja_vertical.pack_start(self.caja_horizontal_botones_aceptar_cancelar, True, True, 0)
+
+        self.operation = None
 
         self.add(self.caja_vertical)
         self.show_all()
@@ -160,6 +185,41 @@ class FiestraPrincipal(Gtk.Window):
 
             for producto in datos_productos:
                 self.modelo_datos_tabla.append([int(producto[0]), str(producto[1]), int(producto[2]), float(producto[3])])
+
+    def on_engadir_boton(self, boton):
+        self.operation = "Engadir"
+        self.mostrar_controler(True)
+        self.bloquear_controler(False)
+        self.bloquear_controler_edicion(True)
+        self.limpiar_controler()
+
+    def mostrar_controler(self, mostrar):
+        self.texto_codigo_producto.set_visible(mostrar)
+        self.texto_cantidade_producto.set_visible(mostrar)
+        self.texto_prezo_producto.set_visible(mostrar)
+
+    def bloquear_controler(self, mostrar):
+        self.caja_boton_aceptar.set_sensitive(mostrar)
+        self.caja_boton_cancelar.set_sensitive(mostrar)
+
+    def bloquear_controler_edicion(self, mostrar):
+        self.boton_engadir.set_sensitive(mostrar)
+        self.boton_editar.set_sensitive(mostrar)
+        self.boton_borrar.set_sensitive(mostrar)
+
+
+    def limpiar_controler(self):
+        self.texto_codigo_producto.set_text("")
+        self.texto_cantidade_producto.set_text("")
+        self.texto_prezo_producto.set_text("")
+
+    def on_boton_cancelar_connect(self, boton):
+        if self.operation == "Engadir":
+            pass
+
+
+    def on_boton_aceptar_connect(self, boton):
+        print("Pulsaste el boton de aceptar")
 
 
 if __name__ == '__main__':
