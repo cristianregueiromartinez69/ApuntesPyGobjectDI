@@ -11,7 +11,7 @@ class FiestraPrincipal(Gtk.Window):
 
         self.set_title("Ejemplo de albaran")
         self.set_resizable(False)
-        self.set_size_request(500,500)
+        self.set_size_request(300,300)
 
         self.caja_vertical = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
@@ -89,37 +89,32 @@ class FiestraPrincipal(Gtk.Window):
 
 
         #tabla
-        self.modelo_datos_tabla = Gtk.ListStore(int, int, str, int, float)
+        self.modelo_datos_tabla = Gtk.ListStore(int, str, int, float)
 
-        self.datos_ejemplo = [
-            (1, 1, "Vespa 15D", 1, 10500.0),
-            (2, 2, "Casco retro", 2, 106.0)
-        ]
+        self.aux_albaran = None
 
+        self.datos_ejemplo = self.base.consultaConParametros("SELECT d.codigoProduto as codigo_produto, p.nomeProduto as nome_produto, d.cantidade as cantidade_produto, d.prezoUnitario as prezo_produto from detalleVentas d LEFT JOIN produtos p on  p.codigoProduto = d.codigoProduto where numeroAlbaran = ?", (self.aux_albaran, ))
         for dato in self.datos_ejemplo:
-            self.modelo_datos_tabla.append([dato[0], dato[1], dato[2], dato[3], dato[4]])
+            self.modelo_datos_tabla.append([dato[0], dato[1], dato[2], dato[3]])
 
         self.view_tabla = Gtk.TreeView(model = self.modelo_datos_tabla)
 
 
-        self.celda_uno = Gtk.CellRendererText()
-        self.columna_uno = Gtk.TreeViewColumn("1", self.celda_uno, text = 0)
-        self.view_tabla.append_column(self.columna_uno)
 
         self.celda_dos = Gtk.CellRendererText()
-        self.columna_dos = Gtk.TreeViewColumn("2", self.celda_dos, text=1)
+        self.columna_dos = Gtk.TreeViewColumn("1", self.celda_dos, text=0)
         self.view_tabla.append_column(self.columna_dos)
 
         self.celda_tres = Gtk.CellRendererText()
-        self.columna_tres = Gtk.TreeViewColumn("3", self.celda_tres, text=2)
+        self.columna_tres = Gtk.TreeViewColumn("2", self.celda_tres, text=1)
         self.view_tabla.append_column(self.columna_tres)
 
         self.celda_cuatro = Gtk.CellRendererText()
-        self.columna_cuatro = Gtk.TreeViewColumn("4", self.celda_cuatro, text=3)
+        self.columna_cuatro = Gtk.TreeViewColumn("3", self.celda_cuatro, text=2)
         self.view_tabla.append_column(self.columna_cuatro)
 
         self.celda_cinco = Gtk.CellRendererText()
-        self.columna_cinco = Gtk.TreeViewColumn("5", self.celda_cinco, text=4)
+        self.columna_cinco = Gtk.TreeViewColumn("4", self.celda_cinco, text=3)
         self.view_tabla.append_column(self.columna_cinco)
 
         #conexiones
@@ -138,18 +133,46 @@ class FiestraPrincipal(Gtk.Window):
         if fila is not None:
             self.modelo_datos_combo = combo.get_model()
             numero = self.modelo_datos_combo[fila][0]
+            self.aux_albaran = numero
 
-            consulta = self.base.consultaConParametros("select  a.numeroAlbara as nalb, a.dataAlbara, a.numeroCliente as numcliente, a.dataEntrega as dataent, c.nomeCliente as nomcliente, c.apelidosCliente as apecliente from ventas a left join clientes c on c.numeroCliente = a.numeroCliente where a.numeroAlbara = ?", (numero,))
+            # Consulta para obtener los datos del albarán
+            consulta = self.base.consultaConParametros(
+                "SELECT a.numeroAlbara, a.dataAlbara, a.numeroCliente, a.dataEntrega, c.nomeCliente, c.apelidosCliente "
+                "FROM ventas a "
+                "LEFT JOIN clientes c ON c.numeroCliente = a.numeroCliente "
+                "WHERE a.numeroAlbara = ?", (numero,))
 
             for dato in consulta:
-                self.data_entry.set_text(str(dato[1]))
-                self.numero_cliente_entry.set_text(str(dato[2]))
-                self.data_entrega_entry.set_text(str(dato[3]))
-                self.nome_cliente_entry.set_text(str(dato[4]))
-                self.apellidos_entry.set_text(str(dato[5]))
+                self.data_entry.set_text(str(dato[1]))  # Data Albará
+                self.numero_cliente_entry.set_text(str(dato[2]))  # Número Cliente
+                self.data_entrega_entry.set_text(str(dato[3]))  # Data Entrega
+                self.nome_cliente_entry.set_text(str(dato[4]))  # Nome Cliente
+                self.apellidos_entry.set_text(str(dato[5]))  # Apellidos Cliente
+
+            # Limpiar la tabla antes de actualizarla
+            self.modelo_datos_tabla.clear()
+
+            datos_productos = self.base.consultaConParametros(
+                "SELECT d.codigoProduto, p.nomeProduto, d.cantidade, d.prezoUnitario "
+                "FROM detalleVentas d "
+                "LEFT JOIN produtos p ON p.codigoProduto = d.codigoProduto "
+                "WHERE d.numeroAlbaran = ?", (numero,))
+
+            for producto in datos_productos:
+                self.modelo_datos_tabla.append([int(producto[0]), str(producto[1]), int(producto[2]), float(producto[3])])
+
 
 if __name__ == '__main__':
     win = FiestraPrincipal()
     win.connect("destroy", Gtk.main_quit)  #si cerramos la pp, se cierra todo
     Gtk.main()
 
+
+
+'''
+SELECT d.codigoProduto as codigo_produto, 
+p.nomeProduto as nome_produto,
+d.cantidade as cantidade_produto,
+d.prezoUnitario as prezo_produto
+from detalleVentas d LEFT JOIN produtos p on  p.codigoProduto = d.codigoProduto where numeroAlbaran = 1
+'''
