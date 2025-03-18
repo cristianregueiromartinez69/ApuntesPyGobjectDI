@@ -2,7 +2,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from ConexionDB import ConexionBD
+from conexionBD import ConexionBD
 
 class FiestraPrincipal(Gtk.Window):
     def __init__(self):
@@ -17,6 +17,8 @@ class FiestraPrincipal(Gtk.Window):
         #conexion
         self.base = ConexionBD("modelosClasicos.dat")
         self.base.conectaBD()
+        self.base.creaCursor()
+
 
         datos_albara = self.base.consultaSenParametros("select DISTINCT numeroAlbaran from detalleVentas")
 
@@ -92,6 +94,10 @@ class FiestraPrincipal(Gtk.Window):
         self.texto_cantidade_producto = Gtk.Entry()
         self.texto_prezo_producto = Gtk.Entry()
 
+        self.texto_codigo_producto.set_visible(False)
+        self.texto_cantidade_producto.set_visible(False)
+        self.texto_prezo_producto.set_visible(False)
+
         self.caja_horizontal_engadir_textos = Gtk.Box(Gtk.Orientation.HORIZONTAL, spacing=5)
         self.caja_horizontal_engadir_textos.pack_start(self.texto_codigo_producto, True, True, 0)
         self.caja_horizontal_engadir_textos.pack_start(self.texto_cantidade_producto, True, True, 0)
@@ -104,7 +110,7 @@ class FiestraPrincipal(Gtk.Window):
 
         self.aux_albaran = None
 
-        self.datos_ejemplo = self.base.consultaConParametros("SELECT d.codigoProduto as codigo_produto, p.nomeProduto as nome_produto, d.cantidade as cantidade_produto, d.prezoUnitario as prezo_produto from detalleVentas d LEFT JOIN produtos p on  p.codigoProduto = d.codigoProduto where numeroAlbaran = ?", (self.aux_albaran, ))
+        self.datos_ejemplo = self.base.consultaConParametros("SELECT d.codigoProduto as codigo_produto, p.nomeProduto as nome_produto, d.cantidade as cantidade_produto, d.prezoUnitario as prezo_produto from detalleVentas d LEFT JOIN produtos p on  p.codigoProduto = d.codigoProduto where numeroAlbaran = ?", self.aux_albaran)
         for dato in self.datos_ejemplo:
             self.modelo_datos_tabla.append([dato[0], dato[1], dato[2], dato[3]])
 
@@ -150,6 +156,7 @@ class FiestraPrincipal(Gtk.Window):
 
         self.operation = None
 
+
         self.add(self.caja_vertical)
         self.show_all()
 
@@ -165,7 +172,7 @@ class FiestraPrincipal(Gtk.Window):
                 "SELECT a.numeroAlbara, a.dataAlbara, a.numeroCliente, a.dataEntrega, c.nomeCliente, c.apelidosCliente "
                 "FROM ventas a "
                 "LEFT JOIN clientes c ON c.numeroCliente = a.numeroCliente "
-                "WHERE a.numeroAlbara = ?", (numero,))
+                "WHERE a.numeroAlbara = ?", numero)
 
             for dato in consulta:
                 self.data_entry.set_text(str(dato[1]))  # Data Albará
@@ -181,7 +188,7 @@ class FiestraPrincipal(Gtk.Window):
                 "SELECT d.codigoProduto, p.nomeProduto, d.cantidade, d.prezoUnitario "
                 "FROM detalleVentas d "
                 "LEFT JOIN produtos p ON p.codigoProduto = d.codigoProduto "
-                "WHERE d.numeroAlbaran = ?", (numero,))
+                "WHERE d.numeroAlbaran = ?", numero)
 
             for producto in datos_productos:
                 self.modelo_datos_tabla.append([int(producto[0]), str(producto[1]), int(producto[2]), float(producto[3])])
@@ -214,12 +221,19 @@ class FiestraPrincipal(Gtk.Window):
         self.texto_prezo_producto.set_text("")
 
     def on_boton_cancelar_connect(self, boton):
-        if self.operation == "Engadir":
-            pass
-
+        pass
 
     def on_boton_aceptar_connect(self, boton):
-        print("Pulsaste el boton de aceptar")
+        if self.operation == "Engadir":
+            lineas = self.base.consultaConParametros(
+                "SELECT numeroLinhaAlbaran from detalleVentas where numeroAlbaran = ?",
+                self.numero_albara_combo.get_model()[self.numero_albara_combo.get_active()][0])
+        numero_linea = 0
+        for linea in lineas:
+            if linea[0] > numero_linea:
+                numero_linea = linea[0]
+        numero_linea = numero_linea + 1
+
 
 
 if __name__ == '__main__':
